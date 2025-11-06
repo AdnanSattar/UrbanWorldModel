@@ -1,0 +1,18 @@
+# Normalize line endings for all text files
+* text=auto eol=lf
+
+# Treat common data/binary formats appropriately
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary
+
+# Linguist hints (optional)
+docs/** linguist-documentation
+frontend/** linguist-language=TypeScript
+backend/** linguist-language=Python
+training/** linguist-language=Python
+
+

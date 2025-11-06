@@ -1,0 +1,102 @@
+services:
+  # FastAPI Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: urbansim-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./training:/training:ro  # Mount training for module imports
+      - ./training/checkpoints:/app/checkpoints:ro
+      # Mirror ETL logs to host ./logs
+      - ./logs:/logs
+      # Mirror ETL processed data to host ./etl/processed_data
+      - ./etl/processed_data:/etl/processed_data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - ENVIRONMENT=development
+      - MODEL_CHECKPOINT_PATH=/app/checkpoints/model_best.json
+      - WAQI_API_TOKEN=${WAQI_API_TOKEN:-}
+      - OPENAQ_API_KEY=${OPENAQ_API_KEY:-}
+      - MOBILITY_API_KEY=${MOBILITY_API_KEY:-}
+      - ENERGY_API_KEY=${ENERGY_API_KEY:-}
+    networks:
+      - urbansim-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Training Service
+  training:
+    build:
+      context: ./training
+      dockerfile: Dockerfile
+    container_name: urbansim-training
+    volumes:
+      - ./training:/train
+      - ./etl:/train/data/etl:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - urbansim-network
+    # Training service runs on-demand via `docker-compose run training`
+    # or `make train`, not as a long-running service
+    profiles:
+      - training
+    command: python urban_world_model.py
+
+  # Next.js Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    container_name: urbansim-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      # For development, mount source code
+      # entrypoint.sh will handle npm install if needed
+      - ./frontend:/app
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NEXT_TELEMETRY_DISABLED=1
+    networks:
+      - urbansim-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+    command: npm run dev
+
+  # Optional: Redis for caching and async tasks (future use)
+  # Uncomment when implementing Celery or caching
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: urbansim-redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - urbansim-network
+  #   restart: unless-stopped
+  #   volumes:
+  #     - redis-data:/data
+
+networks:
+  urbansim-network:
+    name: urbansim-network
+    driver: bridge
+
+# volumes:
+#   redis-data:
+

@@ -1,0 +1,94 @@
+# UrbanSim WM - Base Training Configuration
+
+# Model Architecture
+encoder:
+  latent_dim: 128
+  input_dim: 12  # pm25, energy, traffic + gdp, commercial, hour_sin, hour_cos, room to grow
+
+rssm:
+  latent_dim: 128
+  hidden_dim: 256
+  action_dim: 2  # car_free_ratio, renewable_mix
+
+predictor:
+  latent_dim: 128
+  hidden_dim: 256
+  output_dim: 3  # PM2.5, energy, traffic
+
+# Training Configuration
+training:
+  steps: 500
+  batch_size: 32
+  sequence_length: 50  # hours of history
+  learning_rate: 0.0003
+  
+  # Loss weights
+  reconstruction_weight: 1.0
+  kl_weight: 0.1
+  kl_annealing:
+    strategy: linear
+    start_step: 0
+    end_step: 100
+    start_value: 0.0
+    end_value: 0.1
+  
+  # Optimization
+  optimizer:
+    name: adamw
+    betas: [0.9, 0.999]
+    eps: 1e-8
+    weight_decay: 1e-4
+  lr_scheduler:
+    name: linear_warmup_cosine
+    warmup_steps: 50
+    min_lr: 1e-6
+  grad_clip:
+    type: norm
+    value: 1.0
+  
+  # Checkpointing
+  checkpoint_interval: 100
+  checkpoint_dir: "./checkpoints"
+  save_best: true
+  monitor: val_loss
+  early_stopping:
+    enabled: true
+    patience: 5
+  
+  # Validation
+  val_interval: 100
+  val_samples: 100
+
+# Data Configuration
+data:
+  train_path: "../etl/processed_data/train"
+  val_path: "../etl/processed_data/val"
+  test_path: "../etl/processed_data/test"
+  auto_update_norm: true
+  
+  # Normalization statistics (computed from training data)
+  pm25_mean: 50.0
+  pm25_std: 20.0
+  energy_mean: 1000.0
+  energy_std: 200.0
+  traffic_mean: 1.0
+  traffic_std: 0.3
+  feature_order: ["pm25","energy","traffic","gdp_activity_index","commercial_load_factor","hour_sin","hour_cos"]
+
+# Logging
+logging:
+  tensorboard_dir: "./runs"
+  log_interval: 100
+  track_step_time: true
+  save_config_with_checkpoint: true
+  
+# Environment
+seed: 42
+device: "cuda"  # or "cpu"
+num_workers: 4
+debug:
+  tiny_batch:
+    enabled: true
+    batch_size: 8
+    sequence_length: 10
+
