@@ -6,25 +6,25 @@ UrbanSim WM enables policy experiments by predicting city-scale energy consumpti
 
 ---
 
-## 🌆 Overview
+## Overview
 
 UrbanSim WM combines machine learning with urban systems modeling to answer questions like:
 
-- 💨 **What if we implement car-free days twice a week?**
-- ⚡ **How does renewable energy adoption affect air quality?**
-- 🚗 **What's the impact of combined policies on traffic and emissions?**
+- **What if we implement car-free days twice a week?**
+- **How does renewable energy adoption affect air quality?**
+- **What's the impact of combined policies on traffic and emissions?**
 
 ### Key Features
 
-- **🧠 World Model**: DreamerV3-style recurrent state space model (RSSM) for temporal dynamics
-- **🎯 Policy Simulation**: Interactive sliders to test urban interventions
-- **📊 Real-Time Visualization**: Charts for PM2.5, energy consumption, and traffic
-- **🔌 Data Integration**: Connectors for OpenAQ, mobility datasets, and energy grids
-- **🐳 Fully Dockerized**: One command to run the entire stack
+- **World Model**: DreamerV3-style recurrent state space model (RSSM) for temporal dynamics
+- **Policy Simulation**: Interactive sliders to test urban interventions
+- **Real-Time Visualization**: Charts for PM2.5, energy consumption, and traffic
+- **Data Integration**: Connectors for OpenAQ, mobility datasets, and energy grids
+- **Fully Dockerized**: One command to run the entire stack
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```bash
 ┌─────────────────────────────────────┐
@@ -60,7 +60,7 @@ UrbanSim WM combines machine learning with urban systems modeling to answer ques
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 For a detailed, step-by-step guide with tips and troubleshooting, see the Quickstart:
 
@@ -124,7 +124,7 @@ docker-compose up -d
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```bash
 urbansim-wm/
@@ -173,7 +173,7 @@ urbansim-wm/
 
 ---
 
-## 🔧 Development
+## Development
 
 ### Available Make Commands
 
@@ -230,7 +230,7 @@ python urban_world_model.py
 
 ---
 
-## 📊 API Reference
+## API Reference
 
 ### POST `/api/simulate`
 
@@ -314,7 +314,7 @@ Notes:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests (TODO: implement)
@@ -327,7 +327,7 @@ cd frontend && npm test
 
 ---
 
-## 🗃️ Data Sources
+## Data Sources
 
 ### Air Quality: WAQI (primary) and OpenAQ (fallback)
 
@@ -346,7 +346,7 @@ Other planned integrations:
 
 ---
 
-## 🔮 Model Architecture
+## Model Architecture
 
 ### DreamerV3-Style World Model
 
@@ -372,7 +372,7 @@ Training loop includes dataset loading, validation, checkpointing, KL annealing,
 
 ---
 
-## 🛠️ Customization
+## Customization
 
 ### Adding New Data Sources
 
@@ -395,7 +395,7 @@ Training loop includes dataset loading, validation, checkpointing, KL annealing,
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Backend not starting
 
@@ -425,7 +425,7 @@ make build
 
 ---
 
-## 🛣️ Future Roadmap
+## Future Roadmap
 
 Full roadmap is maintained in `docs/FUTURE_ROADMAP.md`. Highlights:
 
