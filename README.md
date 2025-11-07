@@ -356,6 +356,12 @@ Other planned integrations:
    - Stochastic state (VAE): Models uncertainty
 3. **Predictor**: Decodes latent states back to observations
 
+📖 **For a complete deep dive into the DreamerV3 implementation**, see [`docs/DREAMERV3_IMPLEMENTATION.md`](docs/DREAMERV3_IMPLEMENTATION.md). This document covers:
+- Architecture details (Encoder, RSSM, Predictor)
+- Training process and techniques (KL annealing, gradient clipping, LR scheduling)
+- Inference flow (from ETL data to predictions)
+- Code locations and how everything works together
+
 ### Training Process
 
 ```bash
